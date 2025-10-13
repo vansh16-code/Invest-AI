@@ -5,6 +5,7 @@ An intelligent investment learning platform that combines AI-powered explanation
 ## 🚀 Features
 
 ### 🎯 Core Features
+
 - **Virtual Trading**: Practice with ₹100,000 virtual money without any real financial risk
 - **AI-Powered Explanations**: Get instant AI explanations for complex financial concepts and market movements
 - **Portfolio Management**: Track your holdings, P&L, and overall performance with interactive charts
@@ -13,6 +14,7 @@ An intelligent investment learning platform that combines AI-powered explanation
 - **User Authentication**: Secure login and registration system
 
 ### 📊 Dashboard Features
+
 - Real-time portfolio overview
 - Profit/Loss tracking with interactive charts
 - Quick stats and performance metrics
@@ -20,6 +22,7 @@ An intelligent investment learning platform that combines AI-powered explanation
 - Portfolio diversification analysis
 
 ### 🎓 Learning Platform
+
 - Interactive learning modules
 - Progress tracking
 - Gamified learning experience
@@ -58,23 +61,27 @@ invest/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/vansh16-code/Invest-AI.git
 cd Invest-AI/invest
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -111,6 +118,7 @@ npm run lint     # Run ESLint
 ## 📊 Mock Data Features
 
 The application uses realistic mock data including:
+
 - Indian stocks (RELIANCE.NS, TCS.NS, INFY.NS, HDFCBANK.NS)
 - US stocks (AAPL, TSLA)
 - Historical price data simulation

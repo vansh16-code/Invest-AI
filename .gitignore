@@ -8,9 +8,34 @@ backend/__pycache__/
 backend/venv/
 *.pyc
 
-# Environment
+# Environment files
 .env
+.env.local
+.env.development
+.env.production
+.env.test
 *.env
+
+# Frontend environment files
+frontend/.env
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
+frontend/.env.test
+
+# Backend environment files
+backend/.env
+backend/.env.local
+backend/.env.development
+backend/.env.production
+backend/.env.test
+
+# Invest app environment files
+invest/.env
+invest/.env.local
+invest/.env.development
+invest/.env.production
+invest/.env.test
 
 # OS junk
 .DS_Store
