@@ -19,7 +19,6 @@ async def update_user_profile(
     db: AsyncSession = Depends(get_db)
 ):
     if user_update.username:
-        # Check if username is already taken
         result = await db.execute(select(models.User).filter(
             models.User.username == user_update.username,
             models.User.id != current_user.id
@@ -30,7 +29,6 @@ async def update_user_profile(
         current_user.username = user_update.username
     
     if user_update.email:
-        # Check if email is already taken
         result = await db.execute(select(models.User).filter(
             models.User.email == user_update.email,
             models.User.id != current_user.id
@@ -52,15 +50,12 @@ async def get_user_portfolio(
     result = await db.execute(select(models.Portfolio).filter(models.Portfolio.user_id == current_user.id))
     portfolio = result.scalars().all()
     
-    # Get unique symbols from user's portfolio
     portfolio_symbols = list(set([holding.symbol for holding in portfolio]))
     
-    # Update stock prices for user's holdings
     if portfolio_symbols:
         from ..services.stock_service import stock_service
         await stock_service.update_stock_prices(db, portfolio_symbols)
     
-    # Update current prices in portfolio holdings
     for holding in portfolio:
         stock_result = await db.execute(select(models.Stock).filter(models.Stock.symbol == holding.symbol))
         stock = stock_result.scalar_one_or_none()
@@ -124,7 +119,6 @@ async def debug_portfolio(
     current_user: models.User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Debug endpoint to check portfolio calculations"""
     result = await db.execute(select(models.Portfolio).filter(models.Portfolio.user_id == current_user.id))
     portfolio = result.scalars().all()
     

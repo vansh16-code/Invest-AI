@@ -7,11 +7,11 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String)  # Renamed from 'name' to 'username' for consistency
+    username = Column(String)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
-    balance = Column(Float, default=100000.0)  # Default $100,000 starting balance
+    balance = Column(Float, default=100000.0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True))
     
@@ -52,7 +52,7 @@ class Transaction(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     symbol = Column(String)
-    type = Column(String)  # 'buy' or 'sell'
+    type = Column(String)
     quantity = Column(Integer)
     price = Column(Float)
     total = Column(Float)

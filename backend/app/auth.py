@@ -78,7 +78,7 @@ async def create_user(db: AsyncSession, user: schemas.UserCreate):
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
         email=user.email,
-        username=user.username,  # Direct mapping now
+        username=user.username,
         hashed_password=hashed_password
     )
     db.add(db_user)

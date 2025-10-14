@@ -10,7 +10,6 @@ router = APIRouter(prefix="/api/stocks", tags=["stocks"])
 
 @router.get("/", response_model=List[schemas.Stock])
 async def get_stocks(db: AsyncSession = Depends(get_db)):
-    # Update stock prices before returning
     await stock_service.update_stock_prices(db)
     
     result = await db.execute(select(models.Stock))
@@ -19,7 +18,6 @@ async def get_stocks(db: AsyncSession = Depends(get_db)):
 
 @router.get("/{symbol}", response_model=schemas.Stock)
 async def get_stock(symbol: str, db: AsyncSession = Depends(get_db)):
-    # Update this specific stock's price
     await stock_service.update_stock_prices(db, [symbol.upper()])
     
     result = await db.execute(select(models.Stock).filter(models.Stock.symbol == symbol.upper()))
@@ -39,7 +37,6 @@ async def get_stock_history(symbol: str, period: str = "1d"):
 
 @router.get("/search")
 async def search_stocks(q: str, db: AsyncSession = Depends(get_db)):
-    # First search in database
     result = await db.execute(select(models.Stock).filter(
         models.Stock.symbol.ilike(f"%{q}%") | 
         models.Stock.name.ilike(f"%{q}%")
@@ -49,13 +46,11 @@ async def search_stocks(q: str, db: AsyncSession = Depends(get_db)):
     if db_stocks:
         return db_stocks
     
-    # If not found in database, search using external API
     external_results = stock_service.search_stocks(q)
     return external_results
 
 @router.post("/update-prices")
 async def force_update_stock_prices(db: AsyncSession = Depends(get_db)):
-    """Force update all stock prices - useful for testing"""
     success = await stock_service.update_stock_prices(db)
     if success:
         return {"message": "Stock prices updated successfully"}

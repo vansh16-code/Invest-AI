@@ -295,6 +295,79 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Thanks to all the open-source libraries that made this project possible
 - Inspired by the need for accessible financial education
 
+## 🎓 Learning from Invest-AI
+
+### **What You'll Learn**
+
+#### **📈 Investment Fundamentals**
+- **Stock Market Basics**: Understand how stock prices work, market movements, and trading mechanics
+- **Portfolio Management**: Learn diversification, risk management, and asset allocation strategies
+- **P&L Analysis**: Master profit/loss calculations, percentage returns, and performance metrics
+- **Market Psychology**: Experience emotional aspects of trading without financial risk
+
+#### **💡 Financial Concepts**
+- **Real-Time Data**: Work with live stock prices from Yahoo Finance API
+- **Market Analysis**: Understand market cap, volume, sectors, and stock performance indicators
+- **Risk Assessment**: Learn to evaluate investment risks through portfolio analysis
+- **Performance Tracking**: Monitor your trading decisions and learn from outcomes
+
+#### **🛠️ Technical Skills**
+
+**Frontend Development:**
+- **Next.js 15**: Modern React framework with app router and server components
+- **TypeScript**: Type-safe development with interfaces and proper data modeling
+- **Tailwind CSS**: Utility-first CSS framework for responsive design
+- **Real-time UI**: Dynamic charts, live data updates, and interactive components
+
+**Backend Development:**
+- **FastAPI**: High-performance Python API with automatic documentation
+- **Async Programming**: Non-blocking I/O operations for better scalability
+- **Database Design**: PostgreSQL with SQLAlchemy ORM and proper relationships
+- **API Architecture**: RESTful endpoints with proper error handling and validation
+
+**DevOps & Tools:**
+- **Database Migrations**: Alembic for version-controlled schema changes
+- **External APIs**: Integration with Yahoo Finance and Google Gemini AI
+- **Authentication**: JWT-based security with proper token management
+- **Git Workflow**: Professional version control with meaningful commits
+
+#### **🎯 Practical Learning Path**
+
+1. **Start Trading**: Begin with virtual $100,000 and make your first trades
+2. **Analyze Performance**: Use the dashboard to track your P&L and portfolio growth
+3. **Learn from AI**: Ask the AI mentor to explain complex financial terms
+4. **Compete**: Check the leaderboard to see how you rank against other users
+5. **Study Code**: Explore the codebase to understand full-stack development
+6. **Experiment**: Try different trading strategies and learn from results
+
+#### **🔍 Code Learning Opportunities**
+
+**Study These Implementations:**
+- **Real-time Stock Updates**: See how Yahoo Finance API integration works
+- **P&L Calculations**: Understand financial mathematics in code
+- **Async Database Operations**: Learn modern Python async patterns
+- **React State Management**: Observe how complex UI state is handled
+- **API Design**: Study RESTful endpoint structure and error handling
+- **Database Relationships**: Examine user, portfolio, and transaction models
+
+#### **📚 Educational Features**
+
+- **AI-Powered Explanations**: Get instant explanations for financial terms
+- **Portfolio Analysis**: Receive AI-generated insights about your investments
+- **Market Insights**: Learn from AI-generated market analysis
+- **Performance Metrics**: Understand various ways to measure investment success
+- **Risk Visualization**: See how diversification affects portfolio risk
+
+### **🎯 Learning Outcomes**
+
+After using Invest-AI, you'll have:
+- **Practical trading experience** without financial risk
+- **Understanding of market dynamics** and investment principles
+- **Full-stack development skills** from a real-world application
+- **Database design knowledge** for financial applications
+- **API integration experience** with external services
+- **Modern web development practices** using latest technologies
+
 ## 🎓 Educational Purpose
 
 This application is designed for educational purposes only. All trading is done with virtual money, and no real financial transactions occur. Always consult with financial advisors before making real investment decisions.

@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 
 class StockService:
     def __init__(self):
-        # Popular stocks to initialize with
         self.default_stocks = [
             "AAPL", "GOOGL", "MSFT", "AMZN", "TSLA", "META", "NVDA", "NFLX", 
             "AMD", "INTC", "CRM", "ORCL", "ADBE", "PYPL", "UBER", "SPOT",
@@ -16,12 +15,10 @@ class StockService:
         ]
     
     async def update_stock_prices(self, db: AsyncSession, symbols: Optional[List[str]] = None):
-        """Update stock prices from Yahoo Finance"""
         if not symbols:
             symbols = self.default_stocks
         
         try:
-            # Fetch data for all symbols at once
             tickers = yf.Tickers(' '.join(symbols))
             
             for symbol in symbols:
@@ -38,12 +35,10 @@ class StockService:
                     change = current_price - prev_price
                     change_percent = (change / prev_price) * 100
                     
-                    # Check if stock exists
                     result = await db.execute(select(models.Stock).filter(models.Stock.symbol == symbol))
                     db_stock = result.scalar_one_or_none()
                     
                     if db_stock:
-                        # Update existing stock
                         db_stock.current_price = float(current_price)
                         db_stock.change = float(change)
                         db_stock.change_percent = float(change_percent)
@@ -52,7 +47,6 @@ class StockService:
                         db_stock.sector = info.get('sector', 'Unknown')
                         db_stock.updated_at = datetime.utcnow()
                     else:
-                        # Create new stock
                         db_stock = models.Stock(
                             symbol=symbol,
                             name=info.get('longName', symbol),
@@ -98,9 +92,7 @@ class StockService:
             return []
     
     def search_stocks(self, query: str, limit: int = 10):
-        """Search for stocks by symbol or name"""
         try:
-            # This is a simplified search - in production you'd use a proper search API
             ticker = yf.Ticker(query.upper())
             info = ticker.info
             

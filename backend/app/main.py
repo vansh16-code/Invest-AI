@@ -17,14 +17,13 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  
-    allow_credentials=True,  # Allow credentials
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"]
 )
 
-# Include routers
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(stocks.router)
@@ -49,7 +48,6 @@ async def health_check():
 async def test_endpoint():
     return {"message": "API is working", "cors": "enabled"}
 
-# Add explicit OPTIONS handler for preflight requests
 @app.options("/{full_path:path}")
 async def options_handler(full_path: str):
     return {"message": "OK"}
