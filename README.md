@@ -125,13 +125,16 @@ pip install -r requirements.txt
 3. Set up PostgreSQL database and environment variables:
 
 ```bash
-# Create .env file in backend directory
-DATABASE_URL=postgresql://username:password@localhost:5432/invest_ai_db
-SECRET_KEY=your-secret-key-here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-GEMINI_API_KEY=your-gemini-api-key-here
+# Copy the example environment file
+cp backend/.env.example backend/.env
+
+# Edit the .env file with your actual values:
+# - DATABASE_URL: Your PostgreSQL connection string
+# - SECRET_KEY: Generate a secure random key for JWT tokens
+# - GEMINI_API_KEY: Your Google Gemini AI API key (optional)
 ```
+
+**⚠️ Important**: Never commit your `.env` file to version control!
 
 4. Run the backend server:
 

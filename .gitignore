@@ -35,34 +35,24 @@ ENV/
 env.bak/
 venv.bak/
 
-# Environment files
+# Environment files - NEVER commit these!
 .env
-.env.local
-.env.development
-.env.production
-.env.test
+.env.*
+!.env.example
 *.env
+!*.env.example
 
 # Frontend environment files
-frontend/.env
-frontend/.env.local
-frontend/.env.development
-frontend/.env.production
-frontend/.env.test
+frontend/.env*
+!frontend/.env.example
 
-# Backend environment files
-backend/.env
-backend/.env.local
-backend/.env.development
-backend/.env.production
-backend/.env.test
+# Backend environment files  
+backend/.env*
+!backend/.env.example
 
 # Invest app environment files
-invest/.env
-invest/.env.local
-invest/.env.development
-invest/.env.production
-invest/.env.test
+invest/.env*
+!invest/.env.example
 
 # OS junk
 .DS_Store
