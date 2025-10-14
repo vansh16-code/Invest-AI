@@ -4,7 +4,7 @@ from typing import List, Optional
 
 # User schemas
 class UserBase(BaseModel):
-    username: str  # This will map to 'name' in the database
+    username: str  
     email: EmailStr
 
 class UserCreate(UserBase):
