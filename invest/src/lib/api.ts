@@ -141,7 +141,7 @@ export const leaderboardAPI = {
   }
 }
 
-// AI API endpoints
+
 export const aiAPI = {
   explainTerm: async (term: string) => {
     const response = await api.post('/api/ai/explain', { term })
@@ -156,15 +156,10 @@ export const aiAPI = {
   analyzePortfolio: async () => {
     const response = await api.get('/api/ai/portfolio-analysis')
     return response.data
-  },
-
-  getMarketInsights: async () => {
-    const response = await api.get('/api/ai/insights')
-    return response.data
   }
 }
 
-// Market data API endpoints
+
 export const marketAPI = {
   getMarketStatus: async () => {
     const response = await api.get('/api/market/status')
@@ -182,17 +177,17 @@ export const marketAPI = {
   }
 }
 
-// Utility functions for error handling
+
 export const handleApiError = (error: any) => {
   if (error.response) {
-    // Server responded with error status
+    
     const message = error.response.data?.detail || error.response.data?.message || 'An error occurred'
     return { error: message, status: error.response.status }
   } else if (error.request) {
-    // Request was made but no response received
+    
     return { error: 'Network error. Please check your connection.', status: 0 }
   } else {
-    // Something else happened
+    
     return { error: 'An unexpected error occurred.', status: -1 }
   }
 }
