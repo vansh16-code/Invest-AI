@@ -69,27 +69,7 @@ class StockService:
             print(f"Error updating stock prices: {e}")
             return False
     
-    def get_stock_history(self, symbol: str, period: str = "1d"):
-        """Get historical data for a stock"""
-        try:
-            ticker = yf.Ticker(symbol)
-            hist = ticker.history(period=period)
-            
-            history_data = []
-            for date, row in hist.iterrows():
-                history_data.append({
-                    "date": date.isoformat(),
-                    "open": float(row['Open']),
-                    "high": float(row['High']),
-                    "low": float(row['Low']),
-                    "close": float(row['Close']),
-                    "volume": int(row['Volume'])
-                })
-            
-            return history_data
-        except Exception as e:
-            print(f"Error getting history for {symbol}: {e}")
-            return []
+
     
     def search_stocks(self, query: str, limit: int = 10):
         try:

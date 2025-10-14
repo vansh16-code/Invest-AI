@@ -27,13 +27,7 @@ async def get_stock(symbol: str, db: AsyncSession = Depends(get_db)):
     
     return stock
 
-@router.get("/{symbol}/history")
-async def get_stock_history(symbol: str, period: str = "1d"):
-    history = stock_service.get_stock_history(symbol.upper(), period)
-    if not history:
-        raise HTTPException(status_code=404, detail="Stock history not found")
-    
-    return {"symbol": symbol.upper(), "period": period, "data": history}
+
 
 @router.get("/search")
 async def search_stocks(q: str, db: AsyncSession = Depends(get_db)):
@@ -49,10 +43,3 @@ async def search_stocks(q: str, db: AsyncSession = Depends(get_db)):
     external_results = stock_service.search_stocks(q)
     return external_results
 
-@router.post("/update-prices")
-async def force_update_stock_prices(db: AsyncSession = Depends(get_db)):
-    success = await stock_service.update_stock_prices(db)
-    if success:
-        return {"message": "Stock prices updated successfully"}
-    else:
-        raise HTTPException(status_code=500, detail="Failed to update stock prices")

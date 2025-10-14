@@ -44,9 +44,7 @@ async def read_root():
 async def health_check():
     return {"status": "healthy"}
 
-@app.get("/test")
-async def test_endpoint():
-    return {"message": "API is working", "cors": "enabled"}
+
 
 @app.options("/{full_path:path}")
 async def options_handler(full_path: str):

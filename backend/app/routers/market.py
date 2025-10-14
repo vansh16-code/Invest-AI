@@ -1,26 +1,13 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import func, desc, select
-from datetime import datetime, time
+
 from .. import schemas, models
 from ..database import get_db
 
 router = APIRouter(prefix="/api/market", tags=["market"])
 
-@router.get("/status", response_model=schemas.MarketStatus)
-async def get_market_status():
-    # Simple market hours check (NYSE: 9:30 AM - 4:00 PM ET)
-    now = datetime.now().time()
-    market_open = time(9, 30)
-    market_close = time(16, 0)
-    
-    is_open = market_open <= now <= market_close
-    
-    return {
-        "is_open": is_open,
-        "next_open": None,  # Would calculate next market open time
-        "next_close": None  # Would calculate next market close time
-    }
+
 
 @router.get("/overview", response_model=schemas.MarketOverview)
 async def get_market_overview(db: AsyncSession = Depends(get_db)):

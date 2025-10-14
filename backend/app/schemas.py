@@ -126,24 +126,7 @@ class AIExplanation(BaseModel):
     class Config:
         from_attributes = True
 
-class MarketInsight(BaseModel):
-    title: str
-    content: str
-    sentiment: str
-    confidence: float
 
-class PortfolioAnalysis(BaseModel):
-    total_value: float
-    total_pnl: float
-    risk_score: float
-    diversification_score: float
-    recommendations: List[str]
-
-# Market status schemas
-class MarketStatus(BaseModel):
-    is_open: bool
-    next_open: Optional[datetime] = None
-    next_close: Optional[datetime] = None
 
 class MarketOverview(BaseModel):
     total_stocks: int

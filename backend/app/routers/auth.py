@@ -57,11 +57,3 @@ async def login(login_data: schemas.LoginRequest, db: AsyncSession = Depends(get
         "user": user
     }
 
-@router.post("/refresh")
-async def refresh_token(current_user: models.User = Depends(get_current_user)):
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": current_user.email}, expires_delta=access_token_expires
-    )
-    
-    return {"access_token": access_token, "token_type": "bearer"}
