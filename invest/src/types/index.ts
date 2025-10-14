@@ -43,6 +43,7 @@ export interface Transaction {
 }
 
 export interface LeaderboardEntry {
+  id: number
   username: string
   portfolio_value: number
   total_pnl: number

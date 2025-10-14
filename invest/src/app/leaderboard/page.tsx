@@ -131,27 +131,28 @@ export default function Leaderboard() {
       {/* Top 3 Podium */}
       <div className="mb-12">
         <div className="flex justify-center items-end space-x-4 mb-8">
-          {leaderboard.slice(0, 3).map((entry, index) => {
-            const positions = [1, 0, 2] // Second place, First place, Third place
-            const actualIndex = positions[index]
-            const actualEntry = leaderboard[actualIndex]
-            const heights = ['h-32', 'h-40', 'h-24']
+          {/* Arrange podium as: 2nd, 1st, 3rd for visual effect */}
+          {[1, 0, 2].map((leaderboardIndex, displayIndex) => {
+            const entry = leaderboard[leaderboardIndex]
+            if (!entry) return null
+            
+            const heights = ['h-32', 'h-40', 'h-24'] // 2nd, 1st, 3rd heights
             const bgColors = ['bg-slate-700/50', 'bg-slate-600/50', 'bg-slate-700/50']
             
             return (
-              <div key={actualEntry.username} className="text-center">
+              <div key={entry.id} className="text-center">
                 <div className={cn(
                   'rounded-lg border-2 p-4 flex flex-col justify-end backdrop-blur-sm',
-                  heights[index],
-                  bgColors[index],
-                  actualEntry.rank === 1 ? 'border-yellow-500/50' :
-                  actualEntry.rank === 2 ? 'border-slate-400/50' : 'border-amber-500/50'
+                  heights[displayIndex],
+                  bgColors[displayIndex],
+                  entry.rank === 1 ? 'border-yellow-500/50' :
+                  entry.rank === 2 ? 'border-slate-400/50' : 'border-amber-500/50'
                 )}>
                   <div className="mb-2">
-                    {getRankIcon(actualEntry.rank)}
+                    {getRankIcon(entry.rank)}
                   </div>
-                  <p className="font-bold text-white text-sm">{actualEntry.username}</p>
-                  <p className="text-xs text-slate-300">{formatCurrency(actualEntry.portfolio_value)}</p>
+                  <p className="font-bold text-white text-sm">{entry.username}</p>
+                  <p className="text-xs text-slate-300">{formatCurrency(entry.portfolio_value)}</p>
                 </div>
               </div>
             )
@@ -168,7 +169,7 @@ export default function Leaderboard() {
         <div className="divide-y divide-slate-700/50">
           {leaderboard.map((entry) => (
             <div
-              key={entry.username}
+              key={entry.id}
               className={cn(
                 'px-6 py-4 flex items-center justify-between transition-colors hover:bg-slate-700/30',
                 getRankBg(entry.rank)

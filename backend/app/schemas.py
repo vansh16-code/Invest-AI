@@ -107,6 +107,7 @@ class MarketData(MarketDataBase):
 
 # Leaderboard schemas
 class LeaderboardEntry(BaseModel):
+    id: int
     username: str
     portfolio_value: float
     total_pnl: float
