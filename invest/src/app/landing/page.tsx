@@ -268,7 +268,7 @@ export default function LandingPage() {
           
           <div className="border-t border-slate-700/50 mt-8 pt-8 text-center">
             <p className="text-slate-400 text-sm">
-              © 2024 InvestLearn. All rights reserved. Made with ❤️ for financial education.
+              © 2025 InvestLearn. All rights reserved. 
             </p>
           </div>
         </div>
