@@ -20,5 +20,30 @@ async def explain_term(
         "explanation": explanation
     }
 
+@router.get("/insights", response_model=List[schemas.MarketInsight])
+async def get_market_insights():
+    insights = ai_service.get_market_insights()
+    return insights
+
+@router.get("/portfolio-analysis", response_model=schemas.PortfolioAnalysis)
+async def analyze_portfolio(
+    current_user: models.User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(select(models.Portfolio).filter(models.Portfolio.user_id == current_user.id))
+    portfolio = result.scalars().all()
+    
+    portfolio_data = []
+    for holding in portfolio:
+        portfolio_data.append({
+            "symbol": holding.symbol,
+            "quantity": holding.quantity,
+            "avg_price": holding.avg_price,
+            "current_price": holding.current_price
+        })
+    
+    analysis = ai_service.analyze_portfolio(portfolio_data)
+    return analysis
+
 
 

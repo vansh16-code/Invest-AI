@@ -139,3 +139,17 @@ class UserRank(BaseModel):
     rank: int
     total_users: int
     percentile: float
+
+class MarketInsight(BaseModel):
+    title: str
+    content: str
+    sentiment: str
+    confidence: float
+
+class PortfolioAnalysis(BaseModel):
+    total_value: float
+    total_pnl: float
+    total_pnl_percentage: float
+    risk_score: float
+    diversification_score: float
+    recommendations: List[str]

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { TrendingUp, User, Trophy, BookOpen, Home, LogOut, Brain } from 'lucide-react'
+import { TrendingUp, User, Trophy, BookOpen, Home, LogOut, Brain, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -10,6 +10,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Learn', href: '/learn', icon: BookOpen },
   { name: 'AI Explain', href: '/ai-explain', icon: Brain },
+  { name: 'AI Insights', href: '/ai-insights', icon: Lightbulb },
   { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
 ]
 

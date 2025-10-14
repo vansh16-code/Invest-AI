@@ -156,6 +156,11 @@ export const aiAPI = {
   analyzePortfolio: async () => {
     const response = await api.get('/api/ai/portfolio-analysis')
     return response.data
+  },
+
+  getMarketInsights: async () => {
+    const response = await api.get('/api/ai/insights')
+    return response.data
   }
 }
 
