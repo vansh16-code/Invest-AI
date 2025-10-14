@@ -4,7 +4,6 @@ from .database import engine
 from . import models
 from .routers import auth, users, stocks, trades, market, leaderboard, ai
 
-# Ensure database tables exist (but don't recreate existing ones)
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(models.Base.metadata.create_all)
@@ -15,10 +14,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configure CORS - More permissive for development
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Specific origins for development
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  
     allow_credentials=True,  # Allow credentials
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],

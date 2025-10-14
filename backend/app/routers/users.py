@@ -21,13 +21,13 @@ async def update_user_profile(
     if user_update.username:
         # Check if username is already taken
         result = await db.execute(select(models.User).filter(
-            models.User.name == user_update.username,
+            models.User.username == user_update.username,
             models.User.id != current_user.id
         ))
         existing_user = result.scalar_one_or_none()
         if existing_user:
             raise HTTPException(status_code=400, detail="Username already taken")
-        current_user.name = user_update.username
+        current_user.username = user_update.username
     
     if user_update.email:
         # Check if email is already taken

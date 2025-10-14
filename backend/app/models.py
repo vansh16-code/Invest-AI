@@ -7,25 +7,16 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)  # This matches your existing 'name' column
+    username = Column(String)  # Renamed from 'name' to 'username' for consistency
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
-    balance = Column(Float, default=100000.0)  # Add balance column with default $100,000
+    balance = Column(Float, default=100000.0)  # Default $100,000 starting balance
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True))
     
     portfolio = relationship("Portfolio", back_populates="user")
     transactions = relationship("Transaction", back_populates="user")
-    
-    # Add a property to map 'name' to 'username' for compatibility
-    @property
-    def username(self):
-        return self.name
-    
-    @username.setter
-    def username(self, value):
-        self.name = value
 
 class Stock(Base):
     __tablename__ = "stocks"

@@ -41,7 +41,7 @@ async def get_user_by_email(db: AsyncSession, email: str):
     return result.scalar_one_or_none()
 
 async def get_user_by_username(db: AsyncSession, username: str):
-    result = await db.execute(select(models.User).filter(models.User.name == username))
+    result = await db.execute(select(models.User).filter(models.User.username == username))
     return result.scalar_one_or_none()
 
 async def authenticate_user(db: AsyncSession, email: str, password: str):
@@ -78,7 +78,7 @@ async def create_user(db: AsyncSession, user: schemas.UserCreate):
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
         email=user.email,
-        name=user.username,  # Map username to name field
+        username=user.username,  # Direct mapping now
         hashed_password=hashed_password
     )
     db.add(db_user)
