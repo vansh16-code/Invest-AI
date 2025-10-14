@@ -11,7 +11,7 @@ class StockService:
         self.default_stocks = [
             "AAPL", "GOOGL", "MSFT", "AMZN", "TSLA", "META", "NVDA", "NFLX", 
             "AMD", "INTC", "CRM", "ORCL", "ADBE", "PYPL", "UBER", "SPOT",
-            "COIN", "SQ", "ROKU", "ZM"
+            "COIN", "ROKU", "ZM", "DIS"
         ]
     
     async def update_stock_prices(self, db: AsyncSession, symbols: Optional[List[str]] = None):
@@ -28,6 +28,7 @@ class StockService:
                     hist = ticker.history(period="2d")
                     
                     if len(hist) < 2:
+                        print(f"Skipping {symbol}: insufficient price data (possibly delisted)")
                         continue
                     
                     current_price = hist['Close'].iloc[-1]

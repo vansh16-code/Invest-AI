@@ -86,8 +86,10 @@ async def get_user_rank(
     # Calculate portfolio values for all users
     user_portfolios_query = select(
         models.User.id,
-        func.sum(models.Portfolio.current_price * models.Portfolio.quantity).label('portfolio_value')
-    ).select_from(models.User.join(models.Portfolio)).group_by(models.User.id)
+        func.coalesce(func.sum(models.Portfolio.current_price * models.Portfolio.quantity), 0).label('portfolio_value')
+    ).select_from(
+        models.User.__table__.outerjoin(models.Portfolio.__table__)
+    ).group_by(models.User.id)
     
     user_portfolios_result = await db.execute(user_portfolios_query)
     user_portfolios = user_portfolios_result.all()
