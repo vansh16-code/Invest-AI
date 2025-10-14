@@ -52,3 +52,12 @@ async def search_stocks(q: str, db: AsyncSession = Depends(get_db)):
     # If not found in database, search using external API
     external_results = stock_service.search_stocks(q)
     return external_results
+
+@router.post("/update-prices")
+async def force_update_stock_prices(db: AsyncSession = Depends(get_db)):
+    """Force update all stock prices - useful for testing"""
+    success = await stock_service.update_stock_prices(db)
+    if success:
+        return {"message": "Stock prices updated successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to update stock prices")
