@@ -1,7 +1,8 @@
 import yfinance as yf
 import pandas as pd
 from typing import List, Optional
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from .. import models, schemas
 from datetime import datetime, timedelta
 
@@ -14,7 +15,7 @@ class StockService:
             "COIN", "SQ", "ROKU", "ZM"
         ]
     
-    def update_stock_prices(self, db: Session, symbols: Optional[List[str]] = None):
+    async def update_stock_prices(self, db: AsyncSession, symbols: Optional[List[str]] = None):
         """Update stock prices from Yahoo Finance"""
         if not symbols:
             symbols = self.default_stocks
@@ -38,7 +39,8 @@ class StockService:
                     change_percent = (change / prev_price) * 100
                     
                     # Check if stock exists
-                    db_stock = db.query(models.Stock).filter(models.Stock.symbol == symbol).first()
+                    result = await db.execute(select(models.Stock).filter(models.Stock.symbol == symbol))
+                    db_stock = result.scalar_one_or_none()
                     
                     if db_stock:
                         # Update existing stock
@@ -67,7 +69,7 @@ class StockService:
                     print(f"Error updating {symbol}: {e}")
                     continue
             
-            db.commit()
+            await db.commit()
             return True
         except Exception as e:
             print(f"Error updating stock prices: {e}")

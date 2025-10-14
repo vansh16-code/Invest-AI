@@ -5,10 +5,9 @@ from . import models
 from .routers import auth, users, stocks, trades, market, leaderboard, ai
 
 # Ensure database tables exist (but don't recreate existing ones)
-try:
-    models.Base.metadata.create_all(bind=engine)
-except Exception as e:
-    print(f"Database warning: {e}")
+async def create_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(models.Base.metadata.create_all)
 
 app = FastAPI(
     title="Investment Trading API",
@@ -35,19 +34,23 @@ app.include_router(market.router)
 app.include_router(leaderboard.router)
 app.include_router(ai.router)
 
+@app.on_event("startup")
+async def startup_event():
+    await create_tables()
+
 @app.get("/")
-def read_root():
+async def read_root():
     return {"message": "Investment Trading API", "version": "1.0.0"}
 
 @app.get("/health")
-def health_check():
+async def health_check():
     return {"status": "healthy"}
 
 @app.get("/test")
-def test_endpoint():
+async def test_endpoint():
     return {"message": "API is working", "cors": "enabled"}
 
 # Add explicit OPTIONS handler for preflight requests
 @app.options("/{full_path:path}")
-def options_handler(full_path: str):
+async def options_handler(full_path: str):
     return {"message": "OK"}

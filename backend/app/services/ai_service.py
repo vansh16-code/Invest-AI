@@ -2,7 +2,8 @@ import google.generativeai as genai
 from typing import List
 import os
 from dotenv import load_dotenv
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from .. import models
 
 load_dotenv()
@@ -21,10 +22,11 @@ class AIService:
             self.enabled = False
             print("Warning: GEMINI_API_KEY not set. AI features will return mock responses.")
     
-    def explain_term(self, term: str, db: Session) -> str:
+    async def explain_term(self, term: str, db: AsyncSession) -> str:
         """Explain a financial term using AI"""
         # Check if explanation already exists
-        existing = db.query(models.AIExplanation).filter(models.AIExplanation.term == term.lower()).first()
+        result = await db.execute(select(models.AIExplanation).filter(models.AIExplanation.term == term.lower()))
+        existing = result.scalar_one_or_none()
         if existing:
             return existing.explanation
         
@@ -35,7 +37,7 @@ class AIService:
             # Save mock explanation to database
             db_explanation = models.AIExplanation(term=term.lower(), explanation=explanation)
             db.add(db_explanation)
-            db.commit()
+            await db.commit()
             
             return explanation
         
@@ -48,7 +50,7 @@ class AIService:
             # Save explanation to database
             db_explanation = models.AIExplanation(term=term.lower(), explanation=explanation)
             db.add(db_explanation)
-            db.commit()
+            await db.commit()
             
             return explanation
         except Exception as e:
@@ -62,7 +64,7 @@ class AIService:
                 # Save fallback explanation to database
                 db_explanation = models.AIExplanation(term=term.lower(), explanation=fallback_explanation)
                 db.add(db_explanation)
-                db.commit()
+                await db.commit()
                 
                 return fallback_explanation
             

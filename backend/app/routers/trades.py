@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from .. import schemas, models
 from ..database import get_db
 from ..auth import get_current_user
@@ -7,13 +8,14 @@ from ..auth import get_current_user
 router = APIRouter(prefix="/api/trades", tags=["trades"])
 
 @router.post("/", response_model=schemas.Transaction)
-def execute_trade(
+async def execute_trade(
     trade: schemas.TransactionCreate,
     current_user: models.User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     # Get stock information
-    stock = db.query(models.Stock).filter(models.Stock.symbol == trade.symbol.upper()).first()
+    result = await db.execute(select(models.Stock).filter(models.Stock.symbol == trade.symbol.upper()))
+    stock = result.scalar_one_or_none()
     if not stock:
         raise HTTPException(status_code=404, detail="Stock not found")
     
@@ -30,10 +32,11 @@ def execute_trade(
         current_user.balance -= total_cost
         
         # Update or create portfolio holding
-        portfolio_holding = db.query(models.Portfolio).filter(
+        portfolio_result = await db.execute(select(models.Portfolio).filter(
             models.Portfolio.user_id == current_user.id,
             models.Portfolio.symbol == trade.symbol.upper()
-        ).first()
+        ))
+        portfolio_holding = portfolio_result.scalar_one_or_none()
         
         if portfolio_holding:
             # Update existing holding
@@ -55,10 +58,11 @@ def execute_trade(
     
     elif trade.type == "sell":
         # Check if user has enough shares
-        portfolio_holding = db.query(models.Portfolio).filter(
+        portfolio_result = await db.execute(select(models.Portfolio).filter(
             models.Portfolio.user_id == current_user.id,
             models.Portfolio.symbol == trade.symbol.upper()
-        ).first()
+        ))
+        portfolio_holding = portfolio_result.scalar_one_or_none()
         
         if not portfolio_holding or portfolio_holding.quantity < trade.quantity:
             raise HTTPException(status_code=400, detail="Insufficient shares")
@@ -88,7 +92,7 @@ def execute_trade(
     )
     db.add(transaction)
     
-    db.commit()
-    db.refresh(transaction)
+    await db.commit()
+    await db.refresh(transaction)
     
     return transaction

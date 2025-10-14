@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import timedelta
 from .. import schemas, models
 from ..database import get_db
@@ -8,21 +8,21 @@ from ..auth import authenticate_user, create_access_token, create_user, get_user
 router = APIRouter(prefix="/api/auth", tags=["authentication"])
 
 @router.post("/register", response_model=schemas.Token)
-def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
+async def register(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
     # Check if user already exists
-    if get_user_by_email(db, user.email):
+    if await get_user_by_email(db, user.email):
         raise HTTPException(
             status_code=400,
             detail="Email already registered"
         )
-    if get_user_by_username(db, user.username):
+    if await get_user_by_username(db, user.username):
         raise HTTPException(
             status_code=400,
             detail="Username already taken"
         )
     
     # Create user
-    db_user = create_user(db, user)
+    db_user = await create_user(db, user)
     
     # Create access token
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -37,8 +37,8 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     }
 
 @router.post("/login", response_model=schemas.Token)
-def login(login_data: schemas.LoginRequest, db: Session = Depends(get_db)):
-    user = authenticate_user(db, login_data.email, login_data.password)
+async def login(login_data: schemas.LoginRequest, db: AsyncSession = Depends(get_db)):
+    user = await authenticate_user(db, login_data.email, login_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -58,7 +58,7 @@ def login(login_data: schemas.LoginRequest, db: Session = Depends(get_db)):
     }
 
 @router.post("/refresh")
-def refresh_token(current_user: models.User = Depends(get_current_user)):
+async def refresh_token(current_user: models.User = Depends(get_current_user)):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": current_user.email}, expires_delta=access_token_expires

@@ -4,7 +4,8 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from . import models, schemas
 from .database import get_db
 import os
@@ -35,14 +36,16 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+async def get_user_by_email(db: AsyncSession, email: str):
+    result = await db.execute(select(models.User).filter(models.User.email == email))
+    return result.scalar_one_or_none()
 
-def get_user_by_username(db: Session, username: str):
-    return db.query(models.User).filter(models.User.name == username).first()
+async def get_user_by_username(db: AsyncSession, username: str):
+    result = await db.execute(select(models.User).filter(models.User.name == username))
+    return result.scalar_one_or_none()
 
-def authenticate_user(db: Session, email: str, password: str):
-    user = get_user_by_email(db, email)
+async def authenticate_user(db: AsyncSession, email: str, password: str):
+    user = await get_user_by_email(db, email)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -51,7 +54,7 @@ def authenticate_user(db: Session, email: str, password: str):
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -66,12 +69,12 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
     
-    user = get_user_by_email(db, email=email)
+    user = await get_user_by_email(db, email=email)
     if user is None:
         raise credentials_exception
     return user
 
-def create_user(db: Session, user: schemas.UserCreate):
+async def create_user(db: AsyncSession, user: schemas.UserCreate):
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
         email=user.email,
@@ -79,6 +82,6 @@ def create_user(db: Session, user: schemas.UserCreate):
         hashed_password=hashed_password
     )
     db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
+    await db.commit()
+    await db.refresh(db_user)
     return db_user

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import func, select
 from typing import List
 from .. import schemas, models
 from ..database import get_db
@@ -8,14 +8,17 @@ from ..database import get_db
 router = APIRouter(prefix="/api/leaderboard", tags=["leaderboard"])
 
 @router.get("", response_model=List[schemas.LeaderboardEntry])
-def get_leaderboard(limit: int = 10, db: Session = Depends(get_db)):
+async def get_leaderboard(limit: int = 10, db: AsyncSession = Depends(get_db)):
     # Calculate portfolio values and P&L for all users
-    leaderboard_data = db.query(
+    leaderboard_query = select(
         models.User.id,
         models.User.name,
         func.coalesce(func.sum(models.Portfolio.current_price * models.Portfolio.quantity), 0).label('portfolio_value'),
         func.coalesce(func.sum((models.Portfolio.current_price - models.Portfolio.avg_price) * models.Portfolio.quantity), 0).label('total_pnl')
-    ).outerjoin(models.Portfolio).group_by(models.User.id, models.User.name).all()
+    ).select_from(models.User).outerjoin(models.Portfolio).group_by(models.User.id, models.User.name)
+    
+    result = await db.execute(leaderboard_query)
+    leaderboard_data = result.all()
     
     # Calculate P&L percentage and create leaderboard entries
     leaderboard = []
